@@ -1,0 +1,132 @@
+{
+  "sodium": [
+    {
+      "title": "Sodium",
+      "link": "https://modrinth.com/mod/sodium",
+      "icon": "https://cdn.modrinth.com/data/AANobbMI/295862f4724dc3f78df3447ad6072b2dcd3ef0c9_96.webp",
+      "description": "The fastest and most compatible rendering optimization mod for Minecraft. Now available for both NeoForge and Fabric!",
+      "author": "jellysquid3",
+      "category": "mods",
+      "downloads": "57.31M",
+      "followers": "24.7k",
+      "updated": "6 days ago"
+    }
+  ],
+  "iris shaders": [
+    {
+      "title": "Iris Shaders",
+      "link": "https://modrinth.com/mod/iris",
+      "icon": "https://cdn.modrinth.com/data/YL57xq9U/18d0e7f076d3d6ed5bedd472b853909aac5da202_96.webp",
+      "description": "A modern shader pack loader for Minecraft intended to be compatible with existing OptiFine shader packs",
+      "author": "coderbot",
+      "category": "mods",
+      "downloads": "40.62M",
+      "followers": "18.1k",
+      "updated": "6 days ago"
+    }
+  ],
+  "sodium-mods": [
+    {
+      "title": "Sodium",
+      "link": "https://modrinth.com/mod/sodium",
+      "icon": "https://cdn.modrinth.com/data/AANobbMI/295862f4724dc3f78df3447ad6072b2dcd3ef0c9_96.webp",
+      "description": "The fastest and most compatible rendering optimization mod for Minecraft. Now available for both NeoForge and Fabric!",
+      "author": "jellysquid3",
+      "category": "mods",
+      "downloads": "57.31M",
+      "followers": "24.7k",
+      "updated": "6 days ago"
+    }
+  ],
+  "iris shaders-mods": [
+    {
+      "title": "Iris Shaders",
+      "link": "https://modrinth.com/mod/iris",
+      "icon": "https://cdn.modrinth.com/data/YL57xq9U/18d0e7f076d3d6ed5bedd472b853909aac5da202_96.webp",
+      "description": "A modern shader pack loader for Minecraft intended to be compatible with existing OptiFine shader packs",
+      "author": "coderbot",
+      "category": "mods",
+      "downloads": "40.62M",
+      "followers": "18.1k",
+      "updated": "6 days ago"
+    }
+  ],
+  "fabric api-mods": [
+    {
+      "title": "Fabric API",
+      "link": "https://modrinth.com/mod/fabric-api",
+      "icon": "https://cdn.modrinth.com/data/P7dR8mSH/icon.png",
+      "description": "Lightweight and modular API providing common hooks and intercompatibility measures utilized by mods using the Fabric toolchain.",
+      "author": "modmuss50",
+      "category": "mods",
+      "downloads": "58.25M",
+      "followers": "19.6k",
+      "updated": "9 hours ago"
+    }
+  ],
+  "simple voice chat-plugins": [
+    {
+      "title": "Simple Voice Chat",
+      "link": "https://modrinth.com/plugin/simple-voice-chat",
+      "icon": "https://cdn.modrinth.com/data/9eGKb6K1/icon.png",
+      "description": "A working voice chat in Minecraft!",
+      "author": "henkelmax",
+      "category": "plugins",
+      "downloads": "17.21M",
+      "followers": "6,683",
+      "updated": "11 hours ago"
+    }
+  ],
+  "full brightness toggle-mods": [
+    {
+      "title": "Full Brightness Toggle",
+      "link": "https://modrinth.com/mod/full-brightness-toggle",
+      "icon": "https://cdn.modrinth.com/data/aEK1KhsC/d1124e6ed9eb24a9e11649159cd7c7b26cf1a6be_96.webp",
+      "description": "🔆 Press G to toggle the brightness/gamma in-game to maximum and get fullbright night vision.",
+      "author": "Serilum",
+      "category": "mods",
+      "downloads": "1.59M",
+      "followers": "578",
+      "updated": "5 days ago"
+    }
+  ],
+  "collective-mods": [
+    {
+      "title": "Collective",
+      "link": "https://modrinth.com/mod/collective",
+      "icon": "https://cdn.modrinth.com/data/e0M1UDsY/f5e4fe9ac298e2c14591920d6bda937c566accd0_96.webp",
+      "description": "🎓 Collective is a shared library with common code for all of Serilum's mods.",
+      "author": "Serilum",
+      "category": "mods",
+      "downloads": "19.22M",
+      "followers": "3,023",
+      "updated": "5 days ago"
+    }
+  ],
+  "mellow-shaders": [
+    {
+      "title": "Mellow",
+      "link": "https://modrinth.com/shader/mellow",
+      "icon": "https://cdn.modrinth.com/data/BUxf36AP/b2cc2e9b97e5e0c4c7fcd89b7e295f29a29b9c6d_96.webp",
+      "description": "Shaderpack with a painterly aesthetic made for people who want to actually play the game. It's easy on your eyes and on your computer!",
+      "author": "TheCMK",
+      "category": "shaders",
+      "downloads": "644.2k",
+      "followers": "406",
+      "updated": "3 months ago"
+    }
+  ],
+  "mello-shaders": [
+    {
+      "title": "Mellow",
+      "link": "https://modrinth.com/shader/mellow",
+      "icon": "https://cdn.modrinth.com/data/BUxf36AP/b2cc2e9b97e5e0c4c7fcd89b7e295f29a29b9c6d_96.webp",
+      "description": "Shaderpack with a painterly aesthetic made for people who want to actually play the game. It's easy on your eyes and on your computer!",
+      "author": "TheCMK",
+      "category": "shaders",
+      "downloads": "644.2k",
+      "followers": "406",
+      "updated": "3 months ago"
+    }
+  ]
+}

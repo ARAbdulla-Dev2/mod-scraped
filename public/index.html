@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modrinth Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .loader {
+            border-top-color: #3b82f6;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .category-badge {
+            transition: all 0.2s ease;
+        }
+        .category-badge:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="mb-10 text-center">
+            <div class="inline-block p-3 bg-white rounded-xl shadow-sm mb-4">
+                <i class="fas fa-cubes text-3xl gradient-text"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-800 mb-3">
+                <span class="gradient-text">Modrinth</span> Explorer
+            </h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Browse the complete collection of Minecraft projects from Modrinth
+            </p>
+        </header>
+
+        <!-- Search and Filter Section -->
+        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6 mb-8">
+            <div class="flex flex-col md:flex-row gap-4 mb-4">
+                <div class="flex-1">
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search Projects</label>
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="search" 
+                            placeholder="Search by name or description..."
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-56">
+                    <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Filter by Category</label>
+                    <select 
+                        id="category"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                        <option value="all">All Categories</option>
+                        <option value="mod">Mods</option>
+                        <option value="plugin">Plugins</option>
+                        <option value="datapack">Datapacks</option>
+                        <option value="shader">Shaders</option>
+                        <option value="resourcepack">Resource Packs</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Quick Category Filters -->
+            <div class="flex flex-wrap gap-2">
+                <button data-category="mod" class="category-filter px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm flex items-center hover:bg-blue-200 transition-colors">
+                    <i class="fas fa-puzzle-piece mr-1"></i> Mods
+                </button>
+                <button data-category="plugin" class="category-filter px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm flex items-center hover:bg-purple-200 transition-colors">
+                    <i class="fas fa-plug mr-1"></i> Plugins
+                </button>
+                <button data-category="shader" class="category-filter px-3 py-1 bg-pink-100 text-pink-800 rounded-full text-sm flex items-center hover:bg-pink-200 transition-colors">
+                    <i class="fas fa-palette mr-1"></i> Shaders
+                </button>
+                <button data-category="resourcepack" class="category-filter px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm flex items-center hover:bg-green-200 transition-colors">
+                    <i class="fas fa-image mr-1"></i> Resource Packs
+                </button>
+                <button data-category="datapack" class="category-filter px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm flex items-center hover:bg-yellow-200 transition-colors">
+                    <i class="fas fa-database mr-1"></i> Datapacks
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="mb-10">
+            <!-- Results Header -->
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold text-gray-800">Featured Projects</h2>
+                <div id="resultCount" class="text-sm text-gray-500">
+                    <span id="projectCount">0</span> projects loaded
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading" class="flex flex-col items-center justify-center py-12">
+                <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
+                <p class="text-gray-600">Loading all projects...</p>
+                <p class="text-sm text-gray-500 mt-2">This may take a moment</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="error" class="hidden bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-lg">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-circle text-red-500 mt-1"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800" id="errorMessage"></h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty" class="hidden bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg text-center py-12">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                    <i class="fas fa-search text-blue-500 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-medium text-blue-800 mb-2">No projects found</h3>
+                <p class="text-blue-700">Try adjusting your search filters</p>
+            </div>
+
+            <!-- Results Grid -->
+            <div id="resultsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+                <!-- Project cards will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center text-gray-500 text-sm mt-12 pb-8">
+            <p>Modrinth Explorer - Data fetched from <a href="https://modrinth.com" class="text-blue-600 hover:underline" target="_blank">modrinth.com</a></p>
+            <p class="mt-1 text-xs">Last updated: <span id="lastUpdated">Just now</span></p>
+        </footer>
+    </div>
+
+    <script>
+     document.addEventListener('DOMContentLoaded', function() {
+    // DOM Elements
+    const searchInput = document.getElementById('search');
+    const categorySelect = document.getElementById('category');
+    const categoryFilters = document.querySelectorAll('.category-filter');
+    const resultsGrid = document.getElementById('resultsGrid');
+    const loadingElement = document.getElementById('loading');
+    const errorElement = document.getElementById('error');
+    const errorMessage = document.getElementById('errorMessage');
+    const emptyElement = document.getElementById('empty');
+    const resultCount = document.getElementById('resultCount');
+    const projectCount = document.getElementById('projectCount');
+    const lastUpdated = document.getElementById('lastUpdated');
+    
+    // State
+    let allProjects = [];
+    let filteredProjects = [];
+
+    // Base API URL
+    const API_BASE_URL = window.location.hostname === 'localhost' 
+        ? `http://localhost:${window.location.port}/api` 
+        : '/api';
+
+    // Initialize the app
+    init();
+
+    async function init() {
+        // Set up event listeners
+        setupEventListeners();
+        
+        // Automatically fetch all projects on load
+        await fetchAllProjects();
+    }
+
+    function setupEventListeners() {
+        // Search input events
+        searchInput.addEventListener('input', filterProjects);
+        categorySelect.addEventListener('change', filterProjects);
+        
+        // Category filter buttons
+        categoryFilters.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const category = btn.dataset.category;
+                categorySelect.value = category;
+                filterProjects();
+                
+                // Update active state
+                categoryFilters.forEach(b => b.classList.remove('bg-blue-200', 'text-blue-800'));
+                btn.classList.add('bg-blue-200', 'text-blue-800');
+            });
+        });
+    }
+
+    async function fetchAllProjects() {
+        try {
+            loadingElement.classList.remove('hidden');
+            resultsGrid.classList.add('hidden');
+            errorElement.classList.add('hidden');
+            emptyElement.classList.add('hidden');
+            
+            const response = await fetch(`${API_BASE_URL}/all`);
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to fetch projects');
+            }
+            
+            allProjects = data;
+            filteredProjects = [...allProjects];
+            
+            // Update UI
+            projectCount.textContent = allProjects.length;
+            lastUpdated.textContent = new Date().toLocaleString();
+            
+            // Filter and display
+            filterProjects();
+            
+            loadingElement.classList.add('hidden');
+            if (filteredProjects.length > 0) {
+                resultsGrid.classList.remove('hidden');
+            }
+        } catch (err) {
+            showError(err.message);
+            loadingElement.classList.add('hidden');
+        }
+    }
+
+    function filterProjects() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const category = categorySelect.value;
+        
+        filteredProjects = allProjects.filter(project => {
+            const matchesSearch = project.title.toLowerCase().includes(searchTerm) || 
+                                 (project.description && project.description.toLowerCase().includes(searchTerm));
+            const matchesCategory = category === 'all' || 
+                                  project.category.toLowerCase() === category.toLowerCase();
+            return matchesSearch && matchesCategory;
+        });
+        
+        displayResults();
+    }
+
+    function displayResults() {
+        resultsGrid.innerHTML = '';
+        
+        if (filteredProjects.length === 0) {
+            emptyElement.classList.remove('hidden');
+            resultsGrid.classList.add('hidden');
+            resultCount.textContent = '0 projects found';
+            return;
+        }
+        
+        emptyElement.classList.add('hidden');
+        resultsGrid.classList.remove('hidden');
+        
+        resultCount.innerHTML = `<span>${filteredProjects.length}</span> ${filteredProjects.length === 1 ? 'project' : 'projects'} found`;
+        
+        // Sort by popularity (downloads) by default
+        filteredProjects.sort((a, b) => {
+            const aDownloads = parseInt((a.downloads || '0').replace(/,/g, '')) || 0;
+            const bDownloads = parseInt((b.downloads || '0').replace(/,/g, '')) || 0;
+            return bDownloads - aDownloads;
+        });
+
+        filteredProjects.forEach((project, index) => {
+            const card = createProjectCard(project, index);
+            resultsGrid.appendChild(card);
+        });
+    }
+
+    function createProjectCard(project, index) {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 card-hover fade-in';
+        card.style.animationDelay = `${index * 0.05}s`;
+        
+        // Get category color
+        const categoryColors = {
+            'mod': 'bg-blue-100 text-blue-800',
+            'plugin': 'bg-purple-100 text-purple-800',
+            'shader': 'bg-pink-100 text-pink-800',
+            'resourcepack': 'bg-green-100 text-green-800',
+            'datapack': 'bg-yellow-100 text-yellow-800'
+        };
+        const categoryColor = categoryColors[project.category.toLowerCase()] || 'bg-gray-100 text-gray-800';
+        
+        card.innerHTML = `
+            <div class="p-6 h-full flex flex-col">
+                <div class="flex items-start mb-4">
+                    ${project.icon ? `
+                        <img src="${project.icon}" alt="${project.title}" class="w-16 h-16 rounded-lg object-cover mr-4">
+                    ` : `
+                        <div class="w-16 h-16 rounded-lg bg-gray-200 flex items-center justify-center mr-4">
+                            <i class="fas fa-cube text-gray-400 text-2xl"></i>
+                        </div>
+                    `}
+                    <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">${project.title}</h3>
+                        <span class="inline-block px-2 py-1 text-xs font-medium rounded-full ${categoryColor} mb-2 category-badge">
+                            ${project.category}
+                        </span>
+                        <p class="text-sm text-gray-600 line-clamp-2">${project.description || 'No description available'}</p>
+                    </div>
+                </div>
+                
+                <div class="mt-auto pt-4 border-t border-gray-100">
+                    <div class="grid grid-cols-3 gap-2 text-center mb-4">
+                        <div class="text-sm">
+                            <div class="font-medium text-gray-900">${project.downloads || 'N/A'}</div>
+                            <div class="text-xs text-gray-500">Downloads</div>
+                        </div>
+                        <div class="text-sm">
+                            <div class="font-medium text-gray-900">${project.followers || 'N/A'}</div>
+                            <div class="text-xs text-gray-500">Followers</div>
+                        </div>
+                        <div class="text-sm">
+                            <div class="font-medium text-gray-900">${project.updated || 'N/A'}</div>
+                            <div class="text-xs text-gray-500">Updated</div>
+                        </div>
+                    </div>
+                    
+                    <a href="${project.link}" target="_blank" class="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-external-link-alt mr-2"></i> View Project
+                    </a>
+                </div>
+            </div>
+        `;
+        
+        return card;
+    }
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorElement.classList.remove('hidden');
+    }
+});
+    </script>
+</body>
+</html>
